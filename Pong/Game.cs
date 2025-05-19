@@ -11,9 +11,11 @@ namespace Pong
 
         Texture2D ballTexture;
         Vector2 ballPosition;
+        Vector2 ballSpeedVector;
         float ballSpeed;
-        //TODO: Добавете нова булева променлива down, която показва дали топката се движи нагоре/надолу
-
+        double remainderX;
+        double remainderY;
+        
         public Game()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -27,7 +29,7 @@ namespace Pong
                                        _graphics.PreferredBackBufferHeight / 2);
             ballSpeed = 100f;
 
-            //TODO: инициализирайте булевата променлива
+            //TODO: инициализирайте вектора на скоростта ballSpeedVector, за да зададете началната посока на движение
 
             base.Initialize();
         }
@@ -45,10 +47,13 @@ namespace Pong
 
             float updatedBallSpeed = ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            //TODO: Изменете ballPosition.Y координатата в зависимост от стойността на булевата променлива down
+            //TODO: Изменете ballPosition.X и ballPosition.Y в зависимост от посоката на движение
 
-            //TODO: Ако картинката е напуска границите на екрана, това означава, че топката се е "ударила" в края на екрана и трябва да
-            //промени посоката си на движение. За целта трябва да промените променливата down.
+            //TODO: Натрупайте остатъците получени от закръглянето в променливите remainderX и remainderY
+            
+            
+            //TODO: Ако картинката напуска границите на екрана, това означава, че топката се е "ударила" в края на екрана и трябва да
+            //промени посоката си на движение. За целта трябва да промените вектора ballSpeedVector.
 
 
             base.Update(gameTime);
