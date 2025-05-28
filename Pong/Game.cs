@@ -10,10 +10,17 @@ namespace Pong
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        bool isGameOver;
+
+        //ball related stuff
         Texture2D ballTexture;
         Vector2 ballPosition;
         Vector2 ballSpeedVector;
         float ballSpeed;
+
+        //player bats
+        Vector2 pl1BatPosition;
+        Vector2 pl2BatPosition;
         
         public Game()
         {
@@ -30,6 +37,8 @@ namespace Pong
 
             ballSpeedVector = new Vector2(1, -1);
 
+            //TODO: инициализирайте началните позиции за ракетите на играчите
+            //TODO: инициализирайте променливата isGameOver
             base.Initialize();
         }
 
@@ -42,6 +51,8 @@ namespace Pong
 
         private void checkBallCollision()
         {
+            //TODO: променете този метод, така че да отчита това, че при удар на лява/дясна стена играта приключва
+            //TODO: също трябва да "прихванете" колизията с "ракетите" и да промените вектора на скоростта по начин идентичен с текущото решение
             //проверка за допир с края на екрана
             if (this.ballPosition.X > _graphics.PreferredBackBufferWidth - ballTexture.Width / 2)
             {
@@ -95,8 +106,22 @@ namespace Pong
             this.checkBallCollision();
             float updatedBallSpeed = ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             this.updateBallPosition(updatedBallSpeed);
+            this.updateBatsPositions();
 
             base.Update(gameTime);
+        }
+
+        private void updateBatsPositions()
+        {
+            var kstate = Keyboard.GetState();
+
+            //ако е натиснат клавиша "нагоре"
+            if (kstate.IsKeyDown(Keys.Up))
+            {
+                //TODO: променете позицията на "ракетата" на един от играчите
+            }
+
+            //TODO: добавете проверки за други клавиши, за да може да движите и двете "ракети"
         }
 
         protected override void Draw(GameTime gameTime)
@@ -115,6 +140,10 @@ namespace Pong
                 SpriteEffects.None,
                 0f
             );
+
+            //TODO: нарисувайте две "ракети" съответно на позиции pl1BatPosition и pl2BatPosition
+            // "Ракетите" могат да бъдат или картинки или правоъгълници с различни цветове по ваш избор
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
