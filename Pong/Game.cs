@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Pong
 {
@@ -13,8 +14,6 @@ namespace Pong
         Vector2 ballPosition;
         Vector2 ballSpeedVector;
         float ballSpeed;
-        double remainderX;
-        double remainderY;
         
         public Game()
         {
@@ -29,7 +28,7 @@ namespace Pong
                                        _graphics.PreferredBackBufferHeight / 2);
             ballSpeed = 100f;
 
-            //TODO: инициализирайте вектора на скоростта ballSpeedVector, за да зададете началната посока на движение
+            ballSpeedVector = new Vector2(1, -1);
 
             base.Initialize();
         }
@@ -40,21 +39,62 @@ namespace Pong
             ballTexture = Content.Load<Texture2D>("ball");
         }
 
+
+        private void checkBallCollision()
+        {
+            //проверка за допир с края на екрана
+            if (this.ballPosition.X > _graphics.PreferredBackBufferWidth - ballTexture.Width / 2)
+            {
+                this.ballSpeedVector.X = -this.ballSpeedVector.X;
+            }
+            else if (this.ballPosition.X < ballTexture.Width / 2)
+            {
+                this.ballSpeedVector.X = -this.ballSpeedVector.X;
+            }
+
+            if (this.ballPosition.Y > _graphics.PreferredBackBufferHeight - ballTexture.Height / 2)
+            {
+                this.ballSpeedVector.Y = -this.ballSpeedVector.Y;
+            }
+            else if (this.ballPosition.Y < ballTexture.Height / 2)
+            {
+                this.ballSpeedVector.Y = -this.ballSpeedVector.Y;
+            }
+        }
+
+        private void updateBallPosition(float updatedBallSpeed)
+        {
+            float ratio = this.ballSpeedVector.X / this.ballSpeedVector.Y;
+            float deltaY = updatedBallSpeed / (float)Math.Sqrt(1 + ratio * ratio);
+            float deltaX = Math.Abs(ratio * deltaY);
+
+            if (this.ballSpeedVector.X > 0)
+            {
+                this.ballPosition.X += deltaX;
+            }
+            else
+            {
+                this.ballPosition.X -= deltaX;
+            }
+
+            if (this.ballSpeedVector.Y > 0)
+            {
+                this.ballPosition.Y += deltaY;
+            }
+            else
+            {
+                this.ballPosition.Y -= deltaY;
+            }
+        }
+
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            this.checkBallCollision();
             float updatedBallSpeed = ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            //TODO: Изменете ballPosition.X и ballPosition.Y в зависимост от посоката на движение
-
-            //TODO: Натрупайте остатъците получени от закръглянето в променливите remainderX и remainderY
-            
-            
-            //TODO: Ако картинката напуска границите на екрана, това означава, че топката се е "ударила" в края на екрана и трябва да
-            //промени посоката си на движение. За целта трябва да промените вектора ballSpeedVector.
-
+            this.updateBallPosition(updatedBallSpeed);
 
             base.Update(gameTime);
         }
